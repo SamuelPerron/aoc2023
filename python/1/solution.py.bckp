@@ -1,0 +1,80 @@
+def read_file():
+    # return [
+    #     "two1nine",
+    #     "eightwothree",
+    #     "abcone2threexyz",
+    #     "xtwone3four",
+    #     "4nineeightseven2",
+    #     "zoneight234",
+    #     "7pqrstsixteen",
+    # ]
+    with open("input", "r") as f:
+        return f.read().splitlines()
+
+
+def convert_lines_to_digits(file):
+    digits = []
+    for line in file:
+        print(line)
+        first = ("", len(line) - 1)
+        last = ("", 0)
+
+        for digit in (
+            "1", "2", "3", "4", "5", "6", "7", "8", "9",
+            "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+        ):
+            if digit in line:
+                print(digit, line.index(digit))
+                if line.index(digit) < first[1]:
+                    first = (digit, line.index(digit))
+                if line.index(digit) > last[1]:
+                    last = (digit, line.index(digit))
+
+        digits.append(combine_first_and_last_digit(first[0], last[0]))
+
+    return digits
+
+def convert_spelled_digit_to_number(digit):
+    try:
+        int(digit)
+        return digit
+    except ValueError:
+        pass
+
+    if digit == "one":
+        return "1"
+    elif digit == "two":
+        return "2"
+    elif digit == "three":
+        return "3"
+    elif digit == "four":
+        return "4"
+    elif digit == "five":
+        return "5"
+    elif digit == "six":
+        return "6"
+    elif digit == "seven":
+        return "7"
+    elif digit == "eight":
+        return "8"
+    elif digit == "nine":
+        return "9"
+
+def combine_first_and_last_digit(first, last):
+    if first == "":
+        first = last
+
+    if last == "":
+        last = first
+
+    first = convert_spelled_digit_to_number(first)
+    last = convert_spelled_digit_to_number(last)
+
+    if len(first + last) != 2:
+        raise ValueError(first, last)
+
+    print(first, last, "-", int(first + last))
+
+    return int(first + last)
+
+print(sum(convert_lines_to_digits(read_file())))
